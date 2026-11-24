@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubre Calvillo, Aguascalientes | Pueblo Mágico</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        palette: {
+                            1: '#F8C8C1', // Rosa pastel / Melocotón suave
+                            2: '#FAF0D7', // Crema cálido
+                            3: '#FCD5B5', // Durazno pastel
+                            4: '#FDF4EC', // Beige blanquecino suave
+                            5: '#F7BAA1', // Rosa cálido pastel medio
+                            dark: '#4A352F', // Café oscuro para texto principal
+                            muted: '#7A5C53' // Café suave para subtítulos
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; color: #4A352F; background-color: #FDF4EC; }
+        h1, h2, h3, .font-elegant { font-family: 'Playfair Display', serif; }
+        .font-magico { font-family: 'Dancing Script', cursive; }
+        
+        .modal { transition: opacity 0.25s ease; }
+        body.modal-active { overflow: hidden !important; }
+        .favorite-btn.active { color: #e11d48; }
+        .carousel-item { transition: opacity 0.5s ease-in-out; }
+        
+        /* Ocultar barra de scroll estética en el menú horizontal si aplica */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Animación suave para la flecha de desplazamiento del menú */
+        @keyframes swipeHint {
+            0%, 100% { transform: translateX(0); opacity: 0.8; }
+            50% { transform: translateX(4px); opacity: 1; }
+        }
+        .animate-swipe { animation: swipeHint 1.5s infinite ease-in-out; }
+    </style>
+</head>
+<body class="bg-palette-4 text-palette-dark min-h-screen flex flex-col justify-between">
+
+    <!-- Navegación Superior Restaurada y Ajustada para caber completa -->
+    <nav class="bg-palette-4/95 backdrop-blur shadow-sm fixed top-0 left-0 w-full z-50 border-b border-palette-3 min-h-[4rem] flex items-center">
+        <div class="max-w-7xl mx-auto px-4 w-full flex items-center justify-between gap-4">
+            
+            <!-- Logo / Nombre -->
+            <div class="flex items-center cursor-pointer shrink-0" onclick="closeAllSectionModals()">
+                <i class="fa-solid fa-location-dot text-palette-5 text-2xl mr-2"></i>
+                <span class="font-bold text-lg md:text-xl text-palette-dark font-elegant">Visita Calvillo</span>
+            </div>
+
+            <!-- Contenedor del Menú con Indicador de Desplazamiento -->
+            <div class="relative flex items-center min-w-0 flex-1 justify-center max-w-3xl">
+                <!-- Todos los botones visibles con desplazamiento suave si el espacio es reducido -->
+                <div class="flex items-center space-x-3 md:space-x-5 text-xs md:text-sm font-semibold overflow-x-auto no-scrollbar py-2 px-2 w-full justify-start md:justify-center">
+                    <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Inicio</button>
+                    <button onclick="openSectionModal('modal-museo')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Pueblo Mágico</button>
+                    <button onclick="openSectionModal('modal-lugares')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Lugares</button>
+                    <button onclick="openSectionModal('modal-hospedaje')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Hospedaje</button>
+                    <button onclick="openSectionModal('modal-guayaba')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Guayaba</button>
+                    <button onclick="openSectionModal('modal-gastronomia')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Gastronomía</button>
+                    <button onclick="openSectionModal('modal-sierras')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Naturaleza</button>
+                    <button onclick="openSectionModal('modal-presupuesto')" class="text-palette-dark hover:text-palette-5 transition whitespace-nowrap shrink-0">Presupuesto</button>
+                </div>
+                
+                <!-- Indicador visual sutil de deslizamiento (visible en pantallas pequeñas/medianas) -->
+                <div class="md:hidden flex items-center text-palette-5 text-xs font-bold shrink-0 ml-1 animate-swipe pointer-events-none" title="Desliza para ver más opciones">
+                    <i class="fa-solid fa-hand-pointer mr-0.5"></i>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+
+            <!-- Botón Favoritos -->
+            <div class="shrink-0">
+                <button onclick="toggleFavoritesModal()" class="bg-palette-2 text-palette-dark px-3 py-1.5 md:px-4 md:py-2 rounded-full hover:bg-palette-3 transition flex items-center text-xs md:text-sm border border-palette-3 shadow-sm font-semibold whitespace-nowrap">
+                    <i class="fa-solid fa-heart mr-1.5 text-palette-5"></i> <span class="hidden sm:inline">Favoritos</span> (<span id="fav-count">0</span>)
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Hero Section con margen superior para no tapar texto -->
+    <section id="inicio" class="relative flex-grow flex items-center justify-center min-h-screen pt-16">
+        <div class="w-full h-full min-h-[calc(100vh-4rem)] relative flex items-center justify-center">
+            <img src="17_2.jpg" alt="Letras de Calvillo en la plaza principal" class="absolute inset-0 w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x800/FCD5B5/4A352F?text=Calvillo+Pueblo+Mágico'">
+            <div class="absolute inset-0 bg-palette-dark/40 flex items-center justify-center text-center">
+                <div class="px-4 py-8">
+                    <h1 class="text-5xl sm:text-6xl md:text-8xl mb-4 drop-shadow-2xl font-magico tracking-wide" style="line-height: 1.2;">
+                        <span style="color: #FFB3BA;">C</span><span style="color: #E8DFF5;">a</span><span style="color: #C5A3FF;">l</span><span style="color: #BAE1FF;">v</span><span style="color: #BFFCC6;">i</span><span style="color: #FFFFBA;">l</span><span style="color: #D7C4B7;">l</span><span style="color: #FFDFBA;">o</span><span style="color: #FFB3BA;">,</span>
+                        <br class="md:hidden">
+                        <span style="color: #E8DFF5;">P</span><span style="color: #C5A3FF;">u</span><span style="color: #BAE1FF;">e</span><span style="color: #BFFCC6;">b</span><span style="color: #FFFFBA;">l</span><span style="color: #D7C4B7;">o</span>
+                        <span style="color: #FFDFBA;">M</span><span style="color: #FFB3BA;">á</span><span style="color: #E8DFF5;">g</span><span style="color: #C5A3FF;">i</span><span style="color: #BAE1FF;">c</span><span style="color: #BFFCC6;">o</span>
+                    </h1>
+                    <p class="text-lg md:text-2xl text-palette-2 mb-8 max-w-2xl mx-auto drop-shadow-md font-medium">Tierra de la guayaba, deshilados, cascadas y un encanto arquitectónico sin igual en Aguascalientes.</p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <button onclick="openSectionModal('modal-lugares')" class="bg-palette-1 text-palette-dark px-8 py-3 rounded-full text-lg font-bold hover:bg-palette-5 transition shadow-lg border border-palette-3">Comenzar Aventura</button>
+                        <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d118630.29221142079!2d-102.80287391902264!3d21.847055746358892!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d2df90c01%3A0xb30cf92c5bb4b7e1!2sCalvillo%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Cómo llegar a Calvillo, Aguascalientes')" class="bg-palette-2 text-palette-dark px-8 py-3 rounded-full text-lg font-bold hover:bg-palette-3 transition shadow-lg border border-palette-3 flex items-center">
+                            <i class="fa-solid fa-route mr-2 text-palette-dark"></i> Cómo llegar a Calvillo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal 1: Museo y Pueblo Mágico -->
+    <div id="modal-museo" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-2 rounded-2xl w-full max-w-5xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-landmark mr-2 text-palette-5"></i> Pueblo Mágico y MUNPUMA</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/2">
+                        <h2 class="text-3xl font-bold text-palette-dark mb-4">El Orgullo de ser Pueblo Mágico</h2>
+                        <p class="text-palette-muted mb-4 text-justify leading-relaxed font-medium">
+                            Calvillo recibió el nombramiento de <strong>Pueblo Mágico</strong> en 2012 gracias a su invaluable herencia cultural, sus deshilados artesanales, su profunda tradición religiosa y su deliciosa gastronomía. 
+                        </p>
+                        <h3 class="text-2xl font-bold text-palette-dark mt-6 mb-2">Museo Nacional de Pueblos Mágicos (MUNPUMA)</h3>
+                        <p class="text-palette-muted text-justify leading-relaxed font-medium">
+                            Un espacio único en México. En este museo se exhiben piezas representativas de los más de 132 Pueblos Mágicos del país. Un recorrido por la cultura, artesanía y alma de todo México, ¡sin salir de Calvillo!
+                        </p>
+                    </div>
+                    <!-- Carrusel -->
+                    <div class="md:w-1/2 w-full relative h-64 md:h-80 rounded-2xl overflow-hidden shadow-xl group border-2 border-palette-3">
+                        <div id="carousel-images" class="relative w-full h-full">
+                            <img src="museo1.jpg" alt="Fachada del MUNPUMA" class="carousel-item absolute inset-0 w-full h-full object-cover opacity-100" onerror="this.src='https://placehold.co/600x400/FCD5B5/4A352F?text=Fachada+MUNPUMA'">
+                            <img src="museo2.jpg" alt="Interior del museo" class="carousel-item absolute inset-0 w-full h-full object-cover opacity-0" onerror="this.src='https://placehold.co/600x400/F8C8C1/4A352F?text=Interior+MUNPUMA'">
+                            <img src="museo3.jpg" alt="Artesanías del museo" class="carousel-item absolute inset-0 w-full h-full object-cover opacity-0" onerror="this.src='https://placehold.co/600x400/F7BAA1/4A352F?text=Artesan%C3%ADas+MUNPUMA'">
+                        </div>
+                        <button onclick="prevSlide()" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-palette-dark/60 text-palette-4 p-3 rounded-full hover:bg-palette-dark transition"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button onclick="nextSlide()" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-palette-dark/60 text-palette-4 p-3 rounded-full hover:bg-opacity-75 transition"><i class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Lugares Emblemáticos -->
+    <div id="modal-lugares" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-4 rounded-2xl w-full max-w-6xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-2 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-map-location-dot mr-2 text-palette-5"></i> Lugares Imperdibles</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="text-center mb-8">
+                    <p class="text-palette-muted max-w-2xl mx-auto text-lg font-medium">Descubre la magia en cada rincón de Calvillo. Añade tus favoritos para armar tu ruta.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Plaza Principal -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <img src="2.jpg" alt="Kiosco de la Plaza Principal" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/FAF0D7/4A352F?text=Plaza+Principal'">
+                        <button onclick="toggleFavorite('Plaza Principal y Kiosco')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Plaza Principal y Kiosco"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Plaza Principal y Kiosco</h3>
+                            <p class="text-palette-muted text-sm mb-4">El corazón de Calvillo. Ideal para relajarse y disfrutar de una nieve artesanal.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.126830737482!2d-102.7188732!3d21.8473523!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d4a13a89d%3A0x6e2f183cfbb949e2!2sPlaza%20Principal%20de%20Calvillo!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Plaza Principal y Kiosco')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+
+                    <!-- Templo Señor del Salitre -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <div class="relative h-56 flex">
+                            <img src="3.jpg" alt="Templo Señor del Salitre" class="w-1/2 h-full object-cover border-r border-palette-3" onerror="this.src='https://placehold.co/300x400/FCD5B5/4A352F?text=Templo'">
+                            <img src="4.png" alt="Cúpula del Templo" class="w-1/2 h-full object-cover" onerror="this.src='https://placehold.co/300x400/F8C8C1/4A352F?text=C%C3%BApula'">
+                        </div>
+                        <button onclick="toggleFavorite('Templo del Señor del Salitre')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Templo del Señor del Salitre"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Templo del Señor del Salitre</h3>
+                            <p class="text-palette-muted text-sm mb-4">Construido en el siglo XVIII, cuenta con una de las cúpulas más grandes de América Latina.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.132890527318!2d-102.7188732!3d21.8471191!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d431c3a6d%3A0x8e25d2b7bd38bc74!2sParroquia%20del%20Se%C3%B1or%20del%20Salitre!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Templo del Señor del Salitre')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+
+                    <!-- Interior de la Parroquia -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <img src="6.jpg" alt="Interior del Templo" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/F7BAA1/4A352F?text=Interior+Parroquia'">
+                        <button onclick="toggleFavorite('Interior Señor del Salitre')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Interior Señor del Salitre"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Interior de la Parroquia</h3>
+                            <p class="text-palette-muted text-sm mb-4">Descubre el hermoso altar principal y los detalles arquitectónicos únicos.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.132890527318!2d-102.7188732!3d21.8471191!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d431c3a6d%3A0x8e25d2b7bd38bc74!2sParroquia%20del%20Se%C3%B1or%20del%20Salitre!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Interior de la Parroquia del Señor del Salitre')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+
+                    <!-- Complejo Santa Cruz -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <img src="7.avif" alt="Complejo Santa Cruz" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/FAF0D7/4A352F?text=Complejo+Santa+Cruz'">
+                        <button onclick="toggleFavorite('Complejo Santa Cruz')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Complejo Santa Cruz"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Complejo Santa Cruz</h3>
+                            <p class="text-palette-muted text-sm mb-4">Recinto monumental con una cruz gigante y la mejor vista panorámica del pueblo.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.0392015093554!2d-102.7231454238515!3d21.85108605898864!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d819777df09d%3A0xc6adcb65ff61ae57!2sSantuario%20y%20Mirador%20de%20la%20Santa%20Cruz!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Complejo Santa Cruz')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+
+                    <!-- Gradas de San Judas Tadeo -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <img src="5.jpeg" alt="Gradas de San Judas Tadeo" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/FCD5B5/4A352F?text=Gradas+San+Judas'">
+                        <button onclick="toggleFavorite('Gradas San Judas Tadeo')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Gradas San Judas Tadeo"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Gradas de San Judas Tadeo</h3>
+                            <p class="text-palette-muted text-sm mb-4">Pintoresco callejón de escalinatas coloridas. Perfecto para fotografías.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.0856123491825!2d-102.7225134!3d21.8491325!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81f21a415a7%3A0xd64f15ddcf9e9c4f!2sAndador%20San%20Judas%20Tadeo!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Gradas de San Judas Tadeo')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+
+                    <!-- Presa de Malpaso -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden transform hover:-translate-y-1 transition duration-300 relative border border-palette-3">
+                        <img src="16_2.jpg" alt="Presa de Malpaso" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/F8C8C1/4A352F?text=Presa+de+Malpaso'">
+                        <button onclick="toggleFavorite('Presa de Malpaso')" class="favorite-btn absolute top-4 right-4 bg-palette-4/90 p-2 rounded-full shadow text-palette-muted hover:text-red-500 transition" data-name="Presa de Malpaso"><i class="fa-solid fa-heart text-xl"></i></button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Presa de Malpaso</h3>
+                            <p class="text-palette-muted text-sm mb-4">Naturaleza, paseos en lancha y deliciosos restaurantes a la orilla de la presa.</p>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29638.68!2d-102.6575!3d21.8872!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d7a220261cb3%3A0xa63a2386a6350d75!2sPresa%20de%20Malpaso!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Presa de Malpaso')" class="text-palette-dark font-bold hover:text-palette-5 flex items-center bg-palette-1/50 px-3 py-2 rounded-lg border border-palette-3 transition"><i class="fa-solid fa-map-location-dot mr-2 text-palette-dark"></i> Ver ubicación exacta</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Hospedaje -->
+    <div id="modal-hospedaje" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-2 rounded-2xl w-full max-w-6xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-hotel mr-2 text-palette-5"></i> Dónde Hospedarse en Calvillo</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl text-palette-muted mb-2 font-semibold">Hoteles, Resorts y Cabañas Reales</h3>
+                    <p class="text-palette-dark max-w-2xl mx-auto text-lg font-medium">Calvillo cuenta con excelentes opciones de alojamiento para todos los gustos, desde céntricos hoteles boutique hasta confortables haciendas y cabañas campestres.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Hotel Doña Chela -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <span class="text-xs font-bold text-palette-5 uppercase tracking-wider mb-1"><i class="fa-solid fa-location-dot mr-1"></i> Zona Centro</span>
+                            <h3 class="text-xl font-bold text-palette-dark mb-2">Hotel Doña Chela</h3>
+                            <p class="text-palette-muted text-sm mb-4 flex-grow font-medium leading-relaxed">Ubicado en pleno corazón histórico de Calvillo. A pocos pasos del Jardín Principal y de la Parroquia del Señor del Salitre.</p>
+                            <div class="text-xs text-palette-dark space-y-1 mb-4 font-semibold">
+                                <p><i class="fa-solid fa-phone text-palette-5 mr-1"></i> Tel: 495 956 0233</p>
+                                <p><i class="fa-solid fa-map-pin text-palette-5 mr-1"></i> Calle Zaragoza 212, Centro</p>
+                            </div>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.1350123!2d-102.7189!3d21.8472!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d5f8c85c3%3A0x1d530009d1!2sHotel%20Do%C3%B1a%20Chela!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Hotel Doña Chela en Calvillo')" class="w-full bg-palette-1 text-palette-dark py-2 rounded-xl font-bold hover:bg-palette-5 transition border border-palette-3 text-sm">Ver Ubicación</button>
+                        </div>
+                    </div>
+
+                    <!-- Yolihuani Relax Resort -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <span class="text-xs font-bold text-palette-5 uppercase tracking-wider mb-1"><i class="fa-solid fa-spa mr-1"></i> Spa & Relax</span>
+                            <h3 class="text-xl font-bold text-palette-dark mb-2">Yolihuani Resort & Spa</h3>
+                            <p class="text-palette-muted text-sm mb-4 flex-grow font-medium leading-relaxed">Un centro holístico de bienestar y relajación rodeado de tranquilidad. Ofrece masajes, temazcal, cabañas confortables y conexión con la naturaleza.</p>
+                            <div class="text-xs text-palette-dark space-y-1 mb-4 font-semibold">
+                                <p><i class="fa-solid fa-phone text-palette-5 mr-1"></i> Tel: 495 956 0883</p>
+                                <p><i class="fa-solid fa-map-pin text-palette-5 mr-1"></i> Carr. La Panadera - Palo Alto</p>
+                            </div>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.8!2d-102.71!3d21.82!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d2df90c01%3A0xb30cf92c5bb4b7e1!2sCalvillo%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Yolihuani Relax Resort')" class="w-full bg-palette-1 text-palette-dark py-2 rounded-xl font-bold hover:bg-palette-5 transition border border-palette-3 text-sm">Ver Ubicación</button>
+                        </div>
+                    </div>
+
+                    <!-- Hotel La Gloria -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <span class="text-xs font-bold text-palette-5 uppercase tracking-wider mb-1"><i class="fa-solid fa-water-ladder mr-1"></i> Con Alberca</span>
+                            <h3 class="text-xl font-bold text-palette-dark mb-2">Hotel La Gloria</h3>
+                            <p class="text-palette-muted text-sm mb-4 flex-grow font-medium leading-relaxed">Excelente hotel ideal para familias y grupos de viajeros. Cuenta con amplias habitaciones, alberca al aire libre y amplias áreas verdes.</p>
+                            <div class="text-xs text-palette-dark space-y-1 mb-4 font-semibold">
+                                <p><i class="fa-solid fa-phone text-palette-5 mr-1"></i> Tel: 495 956 0180</p>
+                                <p><i class="fa-solid fa-map-pin text-palette-5 mr-1"></i> Blvd. Rodolfo Landeros Gallegos</p>
+                            </div>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.12!2d-102.72!3d21.84!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d2df90c01%3A0xb30cf92c5bb4b7e1!2sCalvillo%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Hotel La Gloria de Calvillo')" class="w-full bg-palette-1 text-palette-dark py-2 rounded-xl font-bold hover:bg-palette-5 transition border border-palette-3 text-sm">Ver Ubicación</button>
+                        </div>
+                    </div>
+
+                    <!-- Cabañas La Huerta -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <div class="p-5 flex flex-col flex-grow">
+                            <span class="text-xs font-bold text-palette-5 uppercase tracking-wider mb-1"><i class="fa-solid fa-tree mr-1"></i> Campestre</span>
+                            <h3 class="text-xl font-bold text-palette-dark mb-2">Cabañas La Huerta</h3>
+                            <p class="text-palette-muted text-sm mb-4 flex-grow font-medium leading-relaxed">Cabañas privadas equipadas rodeadas de huertos de guayaba, con área para asadores, piscina y chimeneas para veladas románticas o familiares.</p>
+                            <div class="text-xs text-palette-dark space-y-1 mb-4 font-semibold">
+                                <p><i class="fa-solid fa-phone text-palette-5 mr-1"></i> Tel: 495 956 1220</p>
+                                <p><i class="fa-solid fa-map-pin text-palette-5 mr-1"></i> Carretera a Aguascalientes, El Sauz</p>
+                            </div>
+                            <button onclick="openMapModal('https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3707.1!2d-102.7!3d21.85!2m3!1f0!2f0!3f0!2m3!1i1024!2i768!4f13.1!3m3!1m2!1s0x8429d81d2df90c01%3A0xb30cf92c5bb4b7e1!2sCalvillo%2C%20Ags.!5e0!3m2!1ses-419!2smx!4v1710000000000!5m2!1ses-419!2smx', 'Cabañas La Huerta')" class="w-full bg-palette-1 text-palette-dark py-2 rounded-xl font-bold hover:bg-palette-5 transition border border-palette-3 text-sm">Ver Ubicación</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Ruta de la Guayaba -->
+    <div id="modal-guayaba" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-3/95 rounded-2xl w-full max-w-5xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-lemon mr-2 text-palette-5"></i> Ruta de la Guayaba</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="md:w-1/2 space-y-6">
+                        <h2 class="text-3xl font-bold text-palette-dark">Ruta de la Guayaba</h2>
+                        <p class="text-lg text-palette-dark leading-relaxed font-medium">
+                            Calvillo es reconocido mundialmente por la producción de una de las guayabas más dulces y aromáticas. Adéntrate en sus campos y huertos para vivir la experiencia del cultivo directo de la tierra.
+                        </p>
+                        <div class="bg-palette-4 p-6 rounded-xl shadow-md mt-4 border-l-4 border-palette-1">
+                            <h4 class="font-bold text-xl mb-2 font-elegant text-palette-dark"><i class="fa-solid fa-circle-info text-palette-5 mr-2"></i> Solicitar Información y Recorridos</h4>
+                            <p class="text-palette-dark text-sm leading-relaxed mb-3 font-medium">Puedes agendar tus recorridos guiados por las huertas o solicitar más informes turísticos en la <strong>Oficina de Atención al Visitante / Secretaría de Turismo de Calvillo</strong>:</p>
+                            <ul class="text-palette-dark space-y-2 text-sm font-medium">
+                                <li class="flex items-center"><i class="fa-solid fa-location-dot text-palette-5 mr-2.5"></i> <span><strong>Ubicación:</strong> Andador Plaza Patria S/N o Palacio Municipal (Planta Baja), Zona Centro, Calvillo.</span></li>
+                                <li class="flex items-center"><i class="fa-solid fa-phone text-palette-5 mr-2.5"></i> <span><strong>Teléfono:</strong> (495) 956 07 06 / (495) 956 00 75</span></li>
+                                <li class="flex items-center"><i class="fa-solid fa-envelope text-palette-5 mr-2.5"></i> <span><strong>Correo:</strong> calvilloturismo@gmail.com</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 grid grid-cols-1 gap-4">
+                        <img src="18_2.jpg" alt="Personas en huertos de guayaba" class="rounded-2xl shadow-lg w-full h-64 object-cover border-2 border-palette-3" onerror="this.src='https://placehold.co/600x400/F8C8C1/4A352F?text=Huertos+de+Guayaba'">
+                        <img src="19_2.jpeg" alt="Guayabas frescas en el árbol" class="rounded-2xl shadow-lg w-full h-64 object-cover border-2 border-palette-3" onerror="this.src='https://placehold.co/600x400/FCD5B5/4A352F?text=Guayabas+Frescas'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Gastronomía -->
+    <div id="modal-gastronomia" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-2 rounded-2xl w-full max-w-6xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-utensils mr-2 text-palette-5"></i> Sabor y Gastronomía de Calvillo</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-3xl font-bold text-palette-dark mb-2">Una Experiencia Culinaria Única</h2>
+                    <p class="text-palette-muted max-w-3xl mx-auto text-base md:text-lg font-medium leading-relaxed">
+                        La cocina de Calvillo fusiona las tradiciones del semidesierto con recetas mestizas y el toque dulce característico de sus cosechas de guayaba.
+                    </p>
+                </div>
+
+                <!-- Platillos Típicos y Postres -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-palette-4 p-6 rounded-2xl border border-palette-3 shadow-sm">
+                        <h3 class="text-2xl font-bold text-palette-dark mb-3 font-elegant flex items-center">
+                            <i class="fa-solid fa-bowl-food text-palette-5 mr-3"></i> Platillos Típicos
+                        </h3>
+                        <ul class="space-y-3 text-palette-dark font-medium text-sm leading-relaxed">
+                            <li><strong>Birria de Chivo y Res:</strong> Preparada estilo piloncillo en hornos tradicionales con especias locales.</li>
+                            <li><strong>Chiles Rellenos de Guayaba:</strong> Especialidad única donde lo dulce y lo salado se combinan magistralmente.</li>
+                            <li><strong>Lechón y Carnitas:</strong> Un clásico dominical ideal para disfrutar en familia en los puestos locales.</li>
+                            <li><strong>Gorditas de Horno:</strong> Elaboradas en masa de maíz cocinadas en hornos de barro.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-palette-4 p-6 rounded-2xl border border-palette-3 shadow-sm">
+                        <h3 class="text-2xl font-bold text-palette-dark mb-3 font-elegant flex items-center">
+                            <i class="fa-solid fa-cookie-bite text-palette-5 mr-3"></i> Dulces y Panadería
+                        </h3>
+                        <ul class="space-y-3 text-palette-dark font-medium text-sm leading-relaxed">
+                            <li><strong>Chamucos:</strong> Pan tradicional elaborado con hojaldre y azúcar, indispensable con café.</li>
+                            <li><strong>Dulces de Guayaba:</strong> Ates, rollos rellenos de cajeta y nuez, mermeladas y jaleas artesanales.</li>
+                            <li><strong>Nieves Artesanales:</strong> Sabores naturales de guayaba, garrafa, y frutas de la región frente al jardín.</li>
+                            <li><strong>Licores Tradicionales:</strong> Cremas de licor y digestivos preparados a base de guayaba.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dónde probar comida típica -->
+                <div class="bg-palette-3/50 p-6 rounded-2xl border border-palette-3 mb-8">
+                    <h3 class="text-2xl font-bold text-palette-dark mb-4 text-center font-elegant">
+                        <i class="fa-solid fa-store text-palette-5 mr-2"></i> ¿Dónde ir a probar comida típica?
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-medium">
+                        <div class="bg-palette-4 p-4 rounded-xl border border-palette-3">
+                            <h4 class="font-bold text-palette-dark text-base mb-1">Mercado Gastronómico</h4>
+                            <p class="text-palette-muted mb-2">A un costado de la Plaza Principal. Ideal para menudito, gorditas y birria matutina.</p>
+                            <span class="text-xs text-palette-5 font-bold"><i class="fa-solid fa-clock"></i> Desayunos y Comidas</span>
+                        </div>
+                        <div class="bg-palette-4 p-4 rounded-xl border border-palette-3">
+                            <h4 class="font-bold text-palette-dark text-base mb-1">Restaurantes de la Presa Malpaso</h4>
+                            <p class="text-palette-muted mb-2">Mariscos, carnes y platillos regionales con hermosa vista panorámica al agua.</p>
+                            <span class="text-xs text-palette-5 font-bold"><i class="fa-solid fa-utensils"></i> Comida Familiar</span>
+                        </div>
+                        <div class="bg-palette-4 p-4 rounded-xl border border-palette-3">
+                            <h4 class="font-bold text-palette-dark text-base mb-1">Andadores del Centro</h4>
+                            <p class="text-palette-muted mb-2">Cafeterías tradicionales, dulcerías de guayaba y neverías artesanales para pasear.</p>
+                            <span class="text-xs text-palette-5 font-bold"><i class="fa-solid fa-ice-cream"></i> Postres y Antojitos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Galería de Imágenes de Gastronomía -->
+                <div>
+                    <h3 class="text-xl font-bold text-palette-dark mb-4 font-elegant"><i class="fa-solid fa-camera text-palette-5 mr-2"></i> Galería Gastronómica</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <img src="gastronomia1.jpg" alt="Platillos típicos de Calvillo" class="rounded-xl shadow-md w-full h-48 object-cover border-2 border-palette-3" onerror="this.src='https://placehold.co/600x400/FCD5B5/4A352F?text=Platillos+T%C3%ADpicos'">
+                        <img src="gastronomia2.jpg" alt="Postres y dulcería artesanal de guayaba" class="rounded-xl shadow-md w-full h-48 object-cover border-2 border-palette-3" onerror="this.src='https://placehold.co/600x400/F8C8C1/4A352F?text=Dulces+y+Nieves'">
+                        <img src="gastronomia3.jpg" alt="Restaurante típico en Calvillo" class="rounded-xl shadow-md w-full h-48 object-cover border-2 border-palette-3" onerror="this.src='https://placehold.co/600x400/F7BAA1/4A352F?text=Restaurantes+y+Antojitos'">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Sierras y Cabañas -->
+    <div id="modal-sierras" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-2 rounded-2xl w-full max-w-6xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-tree mr-2 text-palette-5"></i> Respira Naturaleza</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl text-palette-muted mb-2 font-semibold">Sierra Fría y Sierra del Laurel</h3>
+                    <p class="text-palette-dark max-w-2xl mx-auto text-lg font-medium">Calvillo no solo es cultura, también es aventura. Escapa de la ciudad y sumérgete en los espectaculares bosques de roble y pino, ideales para el senderismo, campismo y descanso total.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Cabaña 1 -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <img src="cabana1.jpg" alt="Cabaña Las Driades" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/FAF0D7/4A352F?text=Las+Driades'">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Cabaña "Las Driades" (Sierra Fría)</h3>
+                            <p class="text-palette-muted mb-4 flex-grow text-sm leading-relaxed font-medium">Hermosa cabaña escondida en la Sierra Fría. Un espacio mágico diseñado para conectarte con la naturaleza. Ideal para familias y parejas.</p>
+                            <a href="http://www.rancholacienega.com/es/" target="_blank" class="block text-center bg-palette-1 text-palette-dark py-2.5 rounded-xl hover:bg-palette-5 transition shadow font-bold tracking-wide border border-palette-3">Ver página web</a>
+                        </div>
+                    </div>
+                    <!-- Cabaña 2 -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <img src="cabana2.jpg" alt="Cabañas Las Manzanillas" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/FCD5B5/4A352F?text=Las+Manzanillas'">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Cabañas "Las Manzanillas"</h3>
+                            <p class="text-palette-muted mb-4 flex-grow text-sm leading-relaxed font-medium">Renta de cómodas cabañas en la inmensidad de la Sierra. Disfruta de atardeceres únicos y el aire más puro de Aguascalientes.</p>
+                            <a href="https://sierrafrialasmanzanillas.com" target="_blank" class="block text-center bg-palette-1 text-palette-dark py-2.5 rounded-xl hover:bg-palette-5 transition shadow font-bold tracking-wide border border-palette-3">Reservar Cabaña</a>
+                        </div>
+                    </div>
+                    <!-- Cabaña 3 -->
+                    <div class="bg-palette-4 rounded-2xl shadow-md overflow-hidden border border-palette-3 flex flex-col">
+                        <img src="cabana3.jpg" alt="Cabaña de Montaña" class="w-full h-56 object-cover" onerror="this.src='https://placehold.co/600x400/F8C8C1/4A352F?text=Caba%C3%B1a+de+Monta%C3%B1a'">
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h3 class="text-2xl font-bold text-palette-dark mb-2">Cabaña de Montaña</h3>
+                            <p class="text-palette-muted mb-4 flex-grow text-sm leading-relaxed font-medium">Un refugio perfecto para descansar y admirar los increíbles paisajes montañosos que rodean Calvillo. Ideal para desconectarse.</p>
+                            <a href="https://www.airbnb.mx/s/Aguascalientes/homes" target="_blank" class="block text-center bg-palette-1 text-palette-dark py-2.5 rounded-xl hover:bg-palette-5 transition shadow font-bold tracking-wide border border-palette-3">Ver en Airbnb</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 6: Calculadora de Presupuesto -->
+    <div id="modal-presupuesto" class="section-modal fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-3/95 rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-4 flex justify-between items-center border-b border-palette-3">
+                <h3 class="font-bold text-xl font-elegant text-palette-dark"><i class="fa-solid fa-wallet mr-2 text-palette-5"></i> Calculadora de Presupuesto</h3>
+                <button onclick="closeAllSectionModals()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="p-6 overflow-y-auto text-center">
+                <p class="mb-6 text-lg text-palette-muted font-medium">Calcula un estimado realista de cuánto gastarás en tu viaje a Calvillo según el tipo de experiencia que buscas.</p>
+                
+                <div class="bg-palette-4 text-palette-dark rounded-2xl shadow-xl p-6 md:p-8 text-left max-w-xl mx-auto border-t-4 border-palette-5 border-x border-b border-palette-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="block text-sm font-bold text-palette-dark mb-2 uppercase tracking-wide">Días de estancia:</label>
+                            <input type="number" id="calc-dias" min="1" value="2" class="w-full px-4 py-2 bg-palette-2 border border-palette-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-palette-5 font-bold text-lg text-palette-dark">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-palette-dark mb-2 uppercase tracking-wide">Estilo de viaje:</label>
+                            <select id="calc-tipo" class="w-full px-4 py-2 bg-palette-2 border border-palette-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-palette-5 font-bold text-palette-dark">
+                                <option value="800">Económico ($800 MXN/día)</option>
+                                <option value="1500" selected>Estándar ($1,500 MXN/día)</option>
+                                <option value="3000">Lujo ($3,000 MXN/día)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button onclick="calcularPresupuesto()" class="w-full bg-palette-1 text-palette-dark font-bold py-3.5 rounded-xl hover:bg-palette-5 transition tracking-wide text-lg border border-palette-3 shadow-md">
+                        Calcular Total Estimado
+                    </button>
+                    
+                    <div id="resultado-presupuesto" class="mt-6 text-center hidden p-4 bg-palette-2 rounded-xl border border-palette-3">
+                        <h3 class="text-sm text-palette-muted font-bold uppercase tracking-wide">Presupuesto Estimado (1 Persona):</h3>
+                        <p class="text-5xl font-bold text-palette-dark mt-2">$<span id="monto-total">0</span> <span class="text-2xl text-palette-muted">MXN</span></p>
+                        <p class="text-xs text-palette-muted mt-3 italic font-medium">*Incluye hospedaje, comidas y entradas básicas. No incluye vuelos/gasolina hasta Calvillo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer con Redes Sociales -->
+    <footer class="bg-palette-2 text-palette-dark py-8 border-t border-palette-3 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h3 class="text-2xl font-bold mb-4 text-palette-dark font-elegant">Visita Calvillo, Aguascalientes</h3>
+            
+            <!-- Redes Sociales -->
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://www.facebook.com/MunicipioDeCalvillo" target="_blank" rel="noopener noreferrer" class="bg-palette-1 p-3 rounded-full text-palette-dark hover:bg-palette-5 text-xl transition transform hover:scale-110 shadow-sm" aria-label="Municipio de Calvillo - Facebook">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+                <a href="https://www.instagram.com/mpiocalvillo" target="_blank" rel="noopener noreferrer" class="bg-palette-1 p-3 rounded-full text-palette-dark hover:bg-palette-5 text-xl transition transform hover:scale-110 shadow-sm" aria-label="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="https://www.youtube.com/user/municipiodecalvillo" target="_blank" rel="noopener noreferrer" class="bg-palette-1 p-3 rounded-full text-palette-dark hover:bg-palette-5 text-xl transition transform hover:scale-110 shadow-sm" aria-label="Municipio de Calvillo - YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+            </div>
+
+            <p class="text-xs text-palette-muted font-medium">© 2024 Guía Turística Interactiva Calvillo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Mapas -->
+    <div id="map-modal" class="fixed inset-0 bg-palette-dark/70 z-40 hidden flex items-center justify-center p-4 pt-24 modal">
+        <div class="bg-palette-4 rounded-2xl w-full max-w-4xl h-[75vh] flex flex-col relative overflow-hidden shadow-2xl border-2 border-palette-3">
+            <div class="p-4 bg-palette-2 flex justify-between items-center text-palette-dark border-b border-palette-3">
+                <h3 id="map-modal-title" class="font-bold text-lg font-elegant"><i class="fa-solid fa-map-location-dot mr-2 text-palette-5"></i> Cómo Llegar</h3>
+                <button onclick="closeMapModal()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold leading-none">×</button>
+            </div>
+            <div class="flex-grow w-full h-full p-2 bg-palette-2">
+                <iframe id="map-iframe" src="" class="w-full h-full rounded-xl border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Favoritos -->
+    <div id="fav-modal" class="fixed inset-0 bg-palette-dark/70 z-40 hidden flex justify-end pt-16 modal">
+        <div class="bg-palette-4 w-full max-w-md h-full shadow-2xl flex flex-col border-l border-palette-3">
+            <div class="p-6 bg-palette-2 border-b border-palette-3 flex justify-between items-center">
+                <h3 class="font-bold text-2xl text-palette-dark font-elegant"><i class="fa-solid fa-heart text-palette-5 mr-2"></i> Mis Favoritos</h3>
+                <button onclick="toggleFavoritesModal()" class="text-palette-dark hover:text-palette-5 text-3xl font-bold">×</button>
+            </div>
+            <div class="p-6 flex-grow overflow-y-auto bg-palette-4">
+                <ul id="fav-list" class="space-y-4"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* Gestión de Modales de Secciones */
+        function openSectionModal(modalId) {
+            closeAllSectionModals();
+            const targetModal = document.getElementById(modalId);
+            if(targetModal) {
+                targetModal.classList.remove('hidden');
+                document.body.classList.add('modal-active');
+            }
+        }
+
+        function closeAllSectionModals() {
+            document.querySelectorAll('.section-modal').forEach(modal => {
+                modal.classList.add('hidden');
+            });
+            document.body.classList.remove('modal-active');
+        }
+
+        /* Favoritos */
+        let favorites = JSON.parse(localStorage.getItem('calvillo_favorites')) || [];
+
+        function updateFavoritesUI() {
+            document.getElementById('fav-count').textContent = favorites.length;
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                const name = btn.getAttribute('data-name');
+                if (favorites.includes(name)) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+
+            const favList = document.getElementById('fav-list');
+            if (favorites.length === 0) {
+                favList.innerHTML = '<li class="text-palette-muted text-center mt-10 font-medium">Aún no tienes favoritos.</li>';
+            } else {
+                favList.innerHTML = favorites.map(fav => `
+                    <li class="bg-palette-2 p-4 rounded-xl border border-palette-3 flex justify-between items-center shadow-sm">
+                        <span class="font-bold text-palette-dark">${fav}</span>
+                        <button onclick="toggleFavorite('${fav}')" class="text-red-500 hover:text-red-700 p-2"><i class="fa-solid fa-trash"></i></button>
+                    </li>
+                `).join('');
+            }
+        }
+
+        function toggleFavorite(name) {
+            const index = favorites.indexOf(name);
+            if (index === -1) favorites.push(name);
+            else favorites.splice(index, 1);
+            localStorage.setItem('calvillo_favorites', JSON.stringify(favorites));
+            updateFavoritesUI();
+        }
+
+        function toggleFavoritesModal() {
+            document.getElementById('fav-modal').classList.toggle('hidden');
+            document.body.classList.toggle('modal-active');
+        }
+
+        /* Mapa */
+        function openMapModal(url, title = 'Ubicación') {
+            document.getElementById('map-modal-title').innerHTML = `<i class="fa-solid fa-map-location-dot mr-2 text-palette-5"></i> ${title}`;
+            document.getElementById('map-iframe').src = url;
+            document.getElementById('map-modal').classList.remove('hidden');
+            document.body.classList.add('modal-active');
+        }
+        function closeMapModal() {
+            document.getElementById('map-iframe').src = "";
+            document.getElementById('map-modal').classList.add('hidden');
+            document.body.classList.remove('modal-active');
+        }
+
+        /* Carrusel */
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-item');
+        
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.style.opacity = (i === index) ? '1' : '0';
+            });
+        }
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+        setInterval(nextSlide, 4000);
+
+        /* Calculadora */
+        function calcularPresupuesto() {
+            const dias = document.getElementById('calc-dias').value;
+            const costoPorDia = document.getElementById('calc-tipo').value;
+            
+            if(dias && dias > 0) {
+                const total = parseInt(dias) * parseInt(costoPorDia);
+                document.getElementById('monto-total').textContent = total.toLocaleString('es-MX');
+                document.getElementById('resultado-presupuesto').classList.remove('hidden');
+            } else {
+                const res = document.getElementById('resultado-presupuesto');
+                res.classList.remove('hidden');
+                res.innerHTML = '<p class="text-red-600 font-bold">Por favor, ingresa un número válido de días.</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', updateFavoritesUI);
+    </script>
+</body>
+</html>
